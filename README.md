@@ -1,1 +1,1 @@
-Répertoires du projet Trashedy 
+Répertoire du projet Trashedy 
