@@ -1,0 +1,9 @@
+{
+	"models" : [
+	{
+		"name" : "Faster_RCNN_resnet50_SGD"
+		"url" : "https://drive.google.com/uc?id=1rHZLF5HayrdDr7XbIyKjhD_Apa4Ot7hA&export=download"
+	}		
+	]
+	
+}
