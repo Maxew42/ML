@@ -1,1 +1,2 @@
-Répertoire du projet Trashedy 
+Directory for Machine Learning projects
+
