@@ -1,3 +1,4 @@
+Trashedy/dataset/**/*
 Trashedy/dataset/*
 Trashedy/dataset/*.*
 

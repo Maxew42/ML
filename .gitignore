@@ -1,7 +1,9 @@
-Trashedy\dataset\*
+Trashedy/dataset/**/*
+Trashedy/dataset/*
+Trashedy/dataset/*.*
 
-!Trashedy\dataset\url_to_datasets.json
+!Trashedy/dataset/url_to_datasets.json
 
-Trashedy\saved_models\*
-
-!Trashedy\saved_models\url_to_models.json
+Trashedy/saved_models/*.*
+Trashedy/saved_models/*
+!Trashedy/saved_models/url_to_models.json
