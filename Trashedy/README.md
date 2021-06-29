@@ -11,3 +11,8 @@ We used Pytorch as the main DL library.
 Content :
     - Notebooks :
         - Train :
+
+        - Load and execute Model :
+
+    - Saved model and datasets : 
+        - For space reasons it is impossible
