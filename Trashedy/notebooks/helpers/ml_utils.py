@@ -150,6 +150,7 @@ def evaluate(data_loader,device,cat_to_index,model):
     """
     mapping = { value : key for (key, value) in cat_to_index.items()}
     detection_threshold = 0.3
+    overlap_threshold = 0.7
     results = []
     model.eval()
     data_loader = tqdm.tqdm(data_loader)
@@ -163,11 +164,33 @@ def evaluate(data_loader,device,cat_to_index,model):
 
                 boxes = outputs[i]['boxes'].data.cpu().numpy()
                 scores = outputs[i]['scores'].data.cpu().numpy()
+                labels = outputs[i]['labels'].data.cpu().numpy()
                 boxes = boxes[scores >= detection_threshold].astype(np.int32)
+                labels = labels[scores >= detection_threshold]
                 scores = scores[scores >= detection_threshold]
                 image_id = image_ids[i]
+                is_overlaping = [False for i in boxes]
+                new_labels,new_boxes,new_scores = [],[],[]
+                for i in range(len(boxes)): #We check that boxes are not overlaping too much
+                    for j in  range(i+1,len(boxes)):
+                        if get_iou(boxes[i],boxes[j]) >= overlap_threshold and is_overlaping[i] == False and is_overlaping[j] == False :
+                            is_overlaping[i] = True
+                            is_overlaping[j] = True
+                            if labels[i] == 'other':
+                                index = j
+                            else : 
+                                index = i
+                            new_labels.append(labels[index])
+                            new_boxes.append(boxes[index])
+                            new_scores.append(scores[index])   
 
-                for box, labels,score in zip(boxes, outputs[i]['labels'],scores):
+                for index, is_over in enumerate(is_overlaping):
+                    if not is_over:
+                        new_labels.append(labels[index])
+                        new_boxes.append(boxes[index])
+                        new_scores.append(scores[index])
+                        
+                for box, labels,score in zip(new_boxes, new_labels,new_scores):
                     results.append({'file_name' : os.path.basename(image_id), 
                                     'classes'   : mapping[labels.item()], 
                                     'xmin'      : box[0],
@@ -191,7 +214,7 @@ def get_iou(bbox1,bbox2):
 def evaluate_to(data_loader,device,cat_to_index,stop_number,model): 
     mapping = { value : key for (key, value) in cat_to_index.items()}
     detection_threshold = 0.3
-    overlap_threshold = 0.6
+    overlap_threshold = 0.65
     results = []
     model.eval()
     data_loader = tqdm.tqdm(data_loader)
@@ -232,13 +255,7 @@ def evaluate_to(data_loader,device,cat_to_index,stop_number,model):
                     if not is_over:
                         new_labels.append(labels[index])
                         new_boxes.append(boxes[index])
-                        new_scores.append(scores[index]) 
-                print()
-                print('--Start--')  
-                print(len(boxes),len(new_boxes))
-                print(len(scores))
-                print(len(labels))
-                print('--End--') 
+                        new_scores.append(scores[index])
                 for box, label,score in zip(new_boxes, new_labels,new_scores):
                     results.append({'file_name' : os.path.basename(image_id), 
                                     'classes'   : mapping[label.item()], 
