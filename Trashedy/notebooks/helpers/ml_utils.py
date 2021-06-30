@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader, Dataset
 import torch
 import os
 import pandas as pd
+import tqdm
 
 class ObjectDetectionDataset(Dataset):
     """
@@ -137,7 +138,7 @@ def extractDataSetFromCOCO(dataset,imagePath):
     df['ymax'] = [row['bbox'][1]+row['bbox'][3] for row in dataset['annotations']]
     return df
 
-def evaluate(data_loader,device,cat_to_index): 
+def evaluate(data_loader,device,cat_to_index,model): 
     """ 
     Args:
         data_loader : A Pytorch dataloader with the images we want to perform detection on.
@@ -174,4 +175,37 @@ def evaluate(data_loader,device,cat_to_index):
                                     'ymax'      : box[3],
                                     'scores'    : score})
     return results
+    
+def evaluate_to(data_loader,device,cat_to_index,stop_number,model): 
+    mapping = { value : key for (key, value) in cat_to_index.items()}
+    detection_threshold = 0.333
+    results = []
+    model.eval()
+    data_loader = tqdm.tqdm(data_loader)
+    cpt = 0
+    with torch.no_grad():
+        for images, image_ids in data_loader:
+            if stop_number <= cpt: # DIRTY BUT DEADLINES ARE EVIL
+                break
+            cpt += 1
+            images = list(image.to(device) for image in images)
+            outputs = model(images)
+            for i, image in enumerate(images):
+
+                boxes = outputs[i]['boxes'].data.cpu().numpy()
+                scores = outputs[i]['scores'].data.cpu().numpy()
+                boxes = boxes[scores >= detection_threshold].astype(np.int32)
+                scores = scores[scores >= detection_threshold]
+                image_id = image_ids[i]
+
+                for box, labels,score in zip(boxes, outputs[i]['labels'],scores):
+                    results.append({'file_name' : os.path.basename(image_id), 
+                                    'classes'   : mapping[labels.item()], 
+                                    'xmin'      : box[0],
+                                    'ymin'      : box[1],
+                                    'xmax'      : box[2],
+                                    'ymax'      : box[3],
+                                    'scores'    : score})
+    return results    
+
 
