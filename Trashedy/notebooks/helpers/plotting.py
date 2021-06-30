@@ -12,7 +12,7 @@ def convert_points_to_box(points, color = 'red', alpha = 0.09):
     height = points[3] - points[1]
     return (plt.Rectangle(upper_left_point, width, height, ec=color,fc=color, alpha=1,facecolor='none',fill = False),plt.Rectangle(upper_left_point, width, height, ec=color,fc=color, alpha=alpha))
 
-def show_bounding_boxes(img,l_boxes,l_scores = None,labels = None,fontsize = 16):
+def show_bounding_boxes(img,l_boxes,l_scores = None,labels = None,fontsize = 16,color_map = None ):
     '''
         Show the bounding boxes in l_boxes for a specified image img in np.array format. 
     '''
@@ -22,17 +22,24 @@ def show_bounding_boxes(img,l_boxes,l_scores = None,labels = None,fontsize = 16)
     colors_idx = [random.randint(0, len(colors)-1) for i in l_boxes]
     plt.imshow(img)
     for i,box in enumerate(l_boxes):
-        contour,texture = convert_points_to_box(box, colors[colors_idx[i]], 0.1)
+        if color_map and labels:
+            contour,texture = convert_points_to_box(box, color_map[labels[i]], 0.1)
+        else : 
+            contour,texture = convert_points_to_box(box, colors[colors_idx[i]], 0.1)
         ax.add_patch(contour)
         ax.add_patch(texture)
         if labels and l_scores:
-            plt.text(box[0],box[1],labels[i] + " : "+ str(np.round_(100*l_scores[i], decimals=2))+ " %",fontsize=fontsize,color =colors[colors_idx[i]] )
+            if color_map:
+                plt.text(box[0] -2,box[1]-6,labels[i] + " : "+ str(np.round_(100*l_scores[i], decimals=2))+ " %",fontsize=fontsize,color = color_map[labels[i]] )
+
+            else:
+                plt.text(box[0] -2,box[1]-6,labels[i] + " : "+ str(np.round_(100*l_scores[i], decimals=2))+ " %",fontsize=fontsize,color = colors[colors_idx[i]] )
 
     ax.get_xaxis().set_ticks([])
     ax.get_yaxis().set_ticks([])
     plt.show()
     
-def show_result(results,path_to_dataset,file_name):
+def show_result(results,path_to_dataset,file_name,color_map = None):
     '''
         Show the bounding boxes in l_boxes for a specified image img in np.array format. 
     '''
@@ -46,7 +53,7 @@ def show_result(results,path_to_dataset,file_name):
             l_labels.append(row['classes'])
             l_scores.append(row['scores'])
     print("Nombre de déchets identifiés : ", len(l_boxes))
-    show_bounding_boxes(img,l_boxes,l_scores = l_scores,labels = l_labels)
+    show_bounding_boxes(img,l_boxes,l_scores = l_scores,labels = l_labels,color_map=color_map)
 
 def moving_average(x, w):
     '''

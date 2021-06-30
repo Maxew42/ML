@@ -8,6 +8,7 @@ import torch
 import os
 import pandas as pd
 import tqdm
+import math
 
 class ObjectDetectionDataset(Dataset):
     """
@@ -175,17 +176,29 @@ def evaluate(data_loader,device,cat_to_index,model):
                                     'ymax'      : box[3],
                                     'scores'    : score})
     return results
+
+def get_area(bbox):
+    return (bbox[2]-bbox[0])*(bbox[3]-bbox[1])
+
+def get_iou(bbox1,bbox2):
+    '''
+        Utils to check bounding boxes overlaping.
+    '''
+    inner_x = max(0, min(bbox1[2], bbox2[2]) - max(bbox1[0], bbox2[0]))
+    inner_y = max(0, min(bbox1[3], bbox2[3]) - max(bbox1[1], bbox2[1]))
+    return inner_x * inner_y/(get_area(bbox1)+get_area(bbox2)-inner_x * inner_y)
     
 def evaluate_to(data_loader,device,cat_to_index,stop_number,model): 
     mapping = { value : key for (key, value) in cat_to_index.items()}
-    detection_threshold = 0.333
+    detection_threshold = 0.3
+    overlap_threshold = 0.6
     results = []
     model.eval()
     data_loader = tqdm.tqdm(data_loader)
     cpt = 0
     with torch.no_grad():
         for images, image_ids in data_loader:
-            if stop_number <= cpt: # DIRTY BUT DEADLINES ARE EVIL
+            if stop_number <= cpt: # DIRTY, BUT DEADLINES ARE EVIL
                 break
             cpt += 1
             images = list(image.to(device) for image in images)
@@ -194,13 +207,41 @@ def evaluate_to(data_loader,device,cat_to_index,stop_number,model):
 
                 boxes = outputs[i]['boxes'].data.cpu().numpy()
                 scores = outputs[i]['scores'].data.cpu().numpy()
+                labels = outputs[i]['labels'].data.cpu().numpy()
                 boxes = boxes[scores >= detection_threshold].astype(np.int32)
+                labels = labels[scores >= detection_threshold]
                 scores = scores[scores >= detection_threshold]
                 image_id = image_ids[i]
 
-                for box, labels,score in zip(boxes, outputs[i]['labels'],scores):
+                is_overlaping = [False for i in boxes]
+                new_labels,new_boxes,new_scores = [],[],[]
+                for i in range(len(boxes)): #We check that boxes are not overlaping too much
+                    for j in  range(i+1,len(boxes)):
+                        if get_iou(boxes[i],boxes[j]) >= overlap_threshold and is_overlaping[i] == False and is_overlaping[j] == False :
+                            is_overlaping[i] = True
+                            is_overlaping[j] = True
+                            if labels[i] == 'other':
+                                index = j
+                            else : 
+                                index = i
+                            
+                            new_labels.append(labels[index])
+                            new_boxes.append(boxes[index])
+                            new_scores.append(scores[index])   
+                for index, is_over in enumerate(is_overlaping):
+                    if not is_over:
+                        new_labels.append(labels[index])
+                        new_boxes.append(boxes[index])
+                        new_scores.append(scores[index]) 
+                print()
+                print('--Start--')  
+                print(len(boxes),len(new_boxes))
+                print(len(scores))
+                print(len(labels))
+                print('--End--') 
+                for box, label,score in zip(new_boxes, new_labels,new_scores):
                     results.append({'file_name' : os.path.basename(image_id), 
-                                    'classes'   : mapping[labels.item()], 
+                                    'classes'   : mapping[label.item()], 
                                     'xmin'      : box[0],
                                     'ymin'      : box[1],
                                     'xmax'      : box[2],
