@@ -9,9 +9,9 @@ Hello, I'm Maximilien a Data & Artificial Intelligence master student at Efrei P
 #### How to use these projects
 Except for a few ones, these project all share a common structure for simplicity.
 Three main folders :
-..* saved_models : url and informations of saved_models can be found in url_to_models.json, new models will be saved here.
-..* datasets : url and informations (classes available...) of saved_models can be found in url_to_datasets.json.
-        - notebooks : The main notebooks of the project are available here.
+* saved_models : url and informations of saved_models can be found in url_to_models.json, new models will be saved here.
+* datasets : url and informations (classes available...) of saved_models can be found in url_to_datasets.json.
+* notebooks : The main notebooks of the project are available here.
 
 #### ReadMe
 - Trashedy : An automatic waste detection and classification system. Created with Pytorch 1.9.0. See the project readme for more information.
