@@ -13,7 +13,7 @@ Three main folders :
 * datasets : url and informations (classes available...) of saved_models can be found in url_to_datasets.json.
 * notebooks : The main notebooks of the project are available here.
 
-#### What are the projects ?s
+#### What are the projects ?
 - Trashedy : An automatic waste detection and classification system. Created with Pytorch 1.9.0. See the project readme for more information.
 
 ## Articles
