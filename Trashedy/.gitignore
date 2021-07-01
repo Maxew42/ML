@@ -1,0 +1,9 @@
+dataset/**/*
+dataset/*
+dataset/*.*
+
+!dataset/url_to_datasets.json
+
+saved_models/*.*
+saved_models/*
+!saved_models/url_to_models.json
