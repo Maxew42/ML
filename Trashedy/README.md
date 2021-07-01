@@ -2,9 +2,10 @@
 
 Repository for the Trashedy project. A five weeks school project aiming to develop a ML object detection model to help map river litter.
 
-Authors : - Maximilien Dufau
-          - Benoit Claudic
-          - Remi Legrand
+Authors :
+- Maximilien Dufau
+- Benoit Claudic
+- Rémi Legrand
 
 We used Pytorch 1.9.0 as the main Deep Learning library.
 
