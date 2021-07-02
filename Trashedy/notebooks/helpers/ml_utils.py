@@ -139,7 +139,7 @@ def extractDataSetFromCOCO(dataset,imagePath):
     df['ymax'] = [row['bbox'][1]+row['bbox'][3] for row in dataset['annotations']]
     return df
 
-def evaluate(data_loader,device,cat_to_index,model,erase_overlaping_boxes = False): 
+def evaluate(data_loader,device,cat_to_index,model,detection_threshold= 0.3,erase_overlaping_boxes = False): 
     """ 
     Args:
         data_loader : A Pytorch dataloader with the images we want to perform detection on.
@@ -149,7 +149,6 @@ def evaluate(data_loader,device,cat_to_index,model,erase_overlaping_boxes = Fals
         results : List of dictionnary with the bounding boxes, the labels and the scores. It can be easely saved as csv or json.
     """
     mapping = { value : key for (key, value) in cat_to_index.items()}
-    detection_threshold = 0.3
     overlap_threshold = 0.7
     results = []
     model.eval()
@@ -214,9 +213,8 @@ def get_iou(bbox1,bbox2):
     inner_y = max(0, min(bbox1[3], bbox2[3]) - max(bbox1[1], bbox2[1]))
     return inner_x * inner_y/(get_area(bbox1)+get_area(bbox2)-inner_x * inner_y)
     
-def evaluate_to(data_loader,device,cat_to_index,stop_number,model,erase_overlaping_boxes = False): 
+def evaluate_to(data_loader,device,cat_to_index,stop_number,model,detection_threshold= 0.3,erase_overlaping_boxes = False): 
     mapping = { value : key for (key, value) in cat_to_index.items()}
-    detection_threshold = 0.3
     overlap_threshold = 0.65
     results = []
     model.eval()
