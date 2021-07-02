@@ -1,8 +1,9 @@
 {
 	"datasets" : [
 	{
-		"name" : "dataset_Trashedy_1.0.zip"
-		"url" : "https://drive.google.com/uc?id=14K-UTvQR-rNo6FfhYxP9_lHATrBiKtIu&export=download"
+		"name" : "dataset_Trashedy_1.0.zip",
+		"url" : "https://drive.google.com/uc?id=14K-UTvQR-rNo6FfhYxP9_lHATrBiKtIu&export=download",
+		"classes" : ["other","pet","plastic_bag","eps-polystyrene-"]
 	}		
 	]
 	

@@ -139,7 +139,7 @@ def extractDataSetFromCOCO(dataset,imagePath):
     df['ymax'] = [row['bbox'][1]+row['bbox'][3] for row in dataset['annotations']]
     return df
 
-def evaluate(data_loader,device,cat_to_index,model): 
+def evaluate(data_loader,device,cat_to_index,model,erase_overlaping_boxes = False): 
     """ 
     Args:
         data_loader : A Pytorch dataloader with the images we want to perform detection on.
@@ -169,28 +169,31 @@ def evaluate(data_loader,device,cat_to_index,model):
                 labels = labels[scores >= detection_threshold]
                 scores = scores[scores >= detection_threshold]
                 image_id = image_ids[i]
-                is_overlaping = [False for i in boxes]
-                new_labels,new_boxes,new_scores = [],[],[]
-                for i in range(len(boxes)): #We check that boxes are not overlaping too much
-                    for j in  range(i+1,len(boxes)):
-                        if get_iou(boxes[i],boxes[j]) >= overlap_threshold and is_overlaping[i] == False and is_overlaping[j] == False :
-                            is_overlaping[i] = True
-                            is_overlaping[j] = True
-                            if labels[i] == 'other':
-                                index = j
-                            else : 
-                                index = i
+                if erase_overlaping_boxes:
+                    is_overlaping = [False for i in boxes]
+                    new_labels,new_boxes,new_scores = [],[],[]
+                    for i in range(len(boxes)): #We check that boxes are not overlaping too much
+                        for j in  range(i+1,len(boxes)):
+                            if get_iou(boxes[i],boxes[j]) >= overlap_threshold and is_overlaping[i] == False and is_overlaping[j] == False :
+                                is_overlaping[i] = True
+                                is_overlaping[j] = True
+                                if labels[i] == 'other':
+                                    index = j
+                                else : 
+                                    index = i
+                                new_labels.append(labels[index])
+                                new_boxes.append(boxes[index])
+                                new_scores.append(scores[index])   
+
+                    for index, is_over in enumerate(is_overlaping):
+                        if not is_over:
                             new_labels.append(labels[index])
                             new_boxes.append(boxes[index])
-                            new_scores.append(scores[index])   
+                            new_scores.append(scores[index])
 
-                for index, is_over in enumerate(is_overlaping):
-                    if not is_over:
-                        new_labels.append(labels[index])
-                        new_boxes.append(boxes[index])
-                        new_scores.append(scores[index])
+                    labels,boxes,scores = new_labels,new_boxes, new_scores
                         
-                for box, labels,score in zip(new_boxes, new_labels,new_scores):
+                for box, labels,score in zip(boxes, labels,scores):
                     results.append({'file_name' : os.path.basename(image_id), 
                                     'classes'   : mapping[labels.item()], 
                                     'xmin'      : box[0],
@@ -211,7 +214,7 @@ def get_iou(bbox1,bbox2):
     inner_y = max(0, min(bbox1[3], bbox2[3]) - max(bbox1[1], bbox2[1]))
     return inner_x * inner_y/(get_area(bbox1)+get_area(bbox2)-inner_x * inner_y)
     
-def evaluate_to(data_loader,device,cat_to_index,stop_number,model): 
+def evaluate_to(data_loader,device,cat_to_index,stop_number,model,erase_overlaping_boxes = False): 
     mapping = { value : key for (key, value) in cat_to_index.items()}
     detection_threshold = 0.3
     overlap_threshold = 0.65
@@ -235,28 +238,30 @@ def evaluate_to(data_loader,device,cat_to_index,stop_number,model):
                 labels = labels[scores >= detection_threshold]
                 scores = scores[scores >= detection_threshold]
                 image_id = image_ids[i]
-
-                is_overlaping = [False for i in boxes]
-                new_labels,new_boxes,new_scores = [],[],[]
-                for i in range(len(boxes)): #We check that boxes are not overlaping too much
-                    for j in  range(i+1,len(boxes)):
-                        if get_iou(boxes[i],boxes[j]) >= overlap_threshold and is_overlaping[i] == False and is_overlaping[j] == False :
-                            is_overlaping[i] = True
-                            is_overlaping[j] = True
-                            if labels[i] == 'other':
-                                index = j
-                            else : 
-                                index = i
-                            
+                if erase_overlaping_boxes :       
+                    is_overlaping = [False for i in boxes]
+                    new_labels,new_boxes,new_scores = [],[],[]
+                    for i in range(len(boxes)): #We check that boxes are not overlaping too much
+                        for j in  range(i+1,len(boxes)):
+                            if get_iou(boxes[i],boxes[j]) >= overlap_threshold and is_overlaping[i] == False and is_overlaping[j] == False :
+                                is_overlaping[i] = True
+                                is_overlaping[j] = True
+                                if labels[i] == 'other':
+                                    index = j
+                                else : 
+                                    index = i
+                                
+                                new_labels.append(labels[index])
+                                new_boxes.append(boxes[index])
+                                new_scores.append(scores[index])   
+                    for index, is_over in enumerate(is_overlaping):
+                        if not is_over:
                             new_labels.append(labels[index])
                             new_boxes.append(boxes[index])
-                            new_scores.append(scores[index])   
-                for index, is_over in enumerate(is_overlaping):
-                    if not is_over:
-                        new_labels.append(labels[index])
-                        new_boxes.append(boxes[index])
-                        new_scores.append(scores[index])
-                for box, label,score in zip(new_boxes, new_labels,new_scores):
+                            new_scores.append(scores[index])
+                    labels,boxes,scores = new_labels,new_boxes, new_scores
+
+                for box, label,score in zip(boxes, labels,scores):
                     results.append({'file_name' : os.path.basename(image_id), 
                                     'classes'   : mapping[label.item()], 
                                     'xmin'      : box[0],
