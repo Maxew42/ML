@@ -14,10 +14,11 @@ We used Pytorch 1.9.0 as the main Deep Learning library.
 
 ## Content
 
-The project is divided in two main parts :
+The project is divided in three main parts :
 
 - The "production" part with the website and the integrated ML model.
 - The research part with notebooks used to train and test the model.
+- The .sql database dump, for you to easily install our database with MySQL.
 
 ### ml-models-environment
 
@@ -28,3 +29,15 @@ The project is divided in two main parts :
 * Saved model and datasets : More informations on the purpose of these folders can be found in the [main readme](https://github.com/Maxew42/ML).
 
 ### web-site
+
+The website was created with VueJS 3.0.1. It is working in pair with an homemade API powered by Flask 2.0.1
+This is a development website.
+
+#### Website installation steps
+
+1. Install required python libraries with `pip3 install -r requirements.txt --no-index`
+2. Setup the database :
+  * Import `dbTrashedy.sql` in MySQL
+  * Modify connection information in `server/main.py`to fit your own database.
+3. Launch the Vue.js app with `npm install` then `npm run serve`
+4. Launch the Flask API with `python server/main.py`
