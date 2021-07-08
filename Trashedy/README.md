@@ -37,7 +37,7 @@ This is a development website.
 
 1. Install required python libraries with `pip3 install -r requirements.txt --no-index`
 2. Setup the database :
-  * Import `dbTrashedy.sql` in MySQL
-  * Modify connection information in `server/main.py`to fit your own database.
+  1. Import `dbTrashedy.sql` in MySQL
+  2. Modify connection information in `server/main.py`to fit your own database.
 3. Launch the Vue.js app with `npm install` then `npm run serve`
 4. Launch the Flask API with `python server/main.py`
