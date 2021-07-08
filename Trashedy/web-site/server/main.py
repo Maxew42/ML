@@ -28,15 +28,15 @@ pymysql.install_as_MySQLdb()
 UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'static/uploaded_imgs/')
 # UPLOAD_FOLDER = 'static/uploaded_imgs/'
 
-MODEL_PATH = "./static/ml_models/model_SGD_balanced_1.2_no_kebab"
+MODEL_PATH = "./static/ml_models/model_SGD_balanced_1.5_no_kebab"
 MODEL_PATH = join(dirname(realpath(__file__)), MODEL_PATH)
-MODEL = torch.load(MODEL_PATH)
 DEVICE = torch.device(
     'cuda') if torch.cuda.is_available() else torch.device('cpu')
 CAT_TO_INDEX = {'other': 1,
                 'pet': 2,
                 'plastic_bag': 3
                 }
+MODEL = torch.load(MODEL_PATH,map_location=DEVICE)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

@@ -18,3 +18,7 @@ Three main folders :
 
 ## Articles
 Still under review, come back in November !
+
+## Music
+
+Bored with your work ? Try [this](https://open.spotify.com/playlist/1JHhPTolRVOLb1rMeKdaDq?si=c1fbd3625e4f49be) !
