@@ -1,4 +1,4 @@
-<img src="https://github.com/Maxew42/ML/blob/main/web-site/src/images/logo.png" alt="Aimeos logo" title="Trashedy" align="right" height="120" />
+<img src="https://github.com/Maxew42/ML/blob/main/web-site/src/images/logo.png" alt="Aimeos logo" title="Trashedy" align="right" height="160" />
 
 # Trashedy
 
