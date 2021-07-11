@@ -1,4 +1,5 @@
-<img src="https://github.com/Maxew42/ML/blob/main/web-site/src/images/logo.png" alt="Aimeos logo" title="Trashedy" align="right" height="60" />
+<img src="https://github.com/Maxew42/ML/blob/main/web-site/src/images/logo.png" alt="Aimeos logo" title="Trashedy" align="right" height="120" />
+
 # Trashedy
 
 Repository for the Trashedy project. A four weeks school project aiming to develop a ML object detection model to help map river litter. 
