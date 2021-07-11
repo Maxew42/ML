@@ -1,24 +1,44 @@
-# Directory for Machine Learning projects
+# Trashedy
 
-A humble repository with my work, everything is either in python or MATLAB. 
+Repository for the Trashedy project. A five weeks school project aiming to develop a ML object detection model to help map river litter.
 
-## About me
-Hello, I'm Maximilien a Data & Artificial Intelligence master student at Efrei Paris. I am into Research and Machine Learning, you will find a few of my works here. If you have any questions please contact me [here](https://www.linkedin.com/in/maximilien-dufau/).
+## Authors
 
-## Projects
-#### How to use these projects ?
-Except for a few ones, these project all share a common organization pattern.
-Three main folders :
-* saved_models : url and informations of saved_models can be found in url_to_models.json, new models will be saved here.
-* datasets : url and informations (classes available...) of saved_models can be found in url_to_datasets.json.
-* notebooks : The main notebooks of the project are available here.
+- Maximilien Dufau
+- Benoit Claudic
+- Rémi Legrand
+- Luc Manceau
+- Amélie Jond
 
-#### What are the projects ?
-- Trashedy : An automatic waste detection and classification system. Created with Pytorch 1.9.0. See the project readme for more information.
+We used Pytorch 1.9.0 as the main Deep Learning library.
 
-## Articles
-Still under review, come back in November !
+## Content
 
-## Music
+The project is divided in three main parts :
 
-Bored with your work ? Try [this](https://open.spotify.com/playlist/1JHhPTolRVOLb1rMeKdaDq?si=c1fbd3625e4f49be) !
+- The "production" part with the website and the integrated ML model.
+- The research part with notebooks used to train and test the model.
+- The .sql database dump, for you to easily install our database with MySQL.
+
+### ml-models-environment
+
+* Notebooks :
+  * Train : This notebook can be use to train a pretrained faster rccn model on a specific dataset.
+  * Load and execute Model : This notebook is a walk-through presenting how to load a saved model and perform prediction on images in a dataset.
+
+* Saved model and datasets : More informations on the purpose of these folders can be found in the [main readme](https://github.com/Maxew42/ML).
+
+### web-site
+
+The website was created with VueJS 3.0.1. It is working in pair with an homemade API powered by Flask 2.0.1
+This is a development website.  
+
+#### Website installation steps
+
+1. Install required python libraries with `pip3 install -r requirements.txt --no-index`
+2. Setup the database :
+  1. Import `dbTrashedy.sql` in MySQL
+  2. Modify connection information in `server/main.py`to fit your own database.
+3. Get a model from `ml-models-environment/saved_models/url_to_models.json` and copy it in `server/static/ml_models`. Adapt the `MODEL_PATH` value in `main.py` if needed.
+4. Launch the Vue.js app with `npm install` then `npm run serve`
+5. Launch the Flask API with `python server/main.py`
