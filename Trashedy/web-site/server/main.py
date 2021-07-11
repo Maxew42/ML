@@ -24,14 +24,19 @@ import pymysql
 import pymysql.cursors
 from PIL import Image, ExifTags
 pymysql.install_as_MySQLdb()
+
 ## PARAMETRISATION ##
+
+# Should be extracted from a config txt/json in the future
 UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'static/uploaded_imgs/')
-# UPLOAD_FOLDER = 'static/uploaded_imgs/'
 
 MODEL_PATH = "./static/ml_models/model_SGD_balanced_1.5_no_kebab"
 MODEL_PATH = join(dirname(realpath(__file__)), MODEL_PATH)
 DEVICE = torch.device(
     'cuda') if torch.cuda.is_available() else torch.device('cpu')
+
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 CAT_TO_INDEX = {'other': 1,
                 'pet': 2,
                 'plastic_bag': 3
@@ -47,6 +52,10 @@ app.secret_key = "super secret key"
 
 
 def get_co():
+    '''
+        Get the connection to the database.
+        Please modify this part according to your SGBD connection parameters.
+    '''
     connection = pymysql.connect(host='localhost',
                                  database='trashedy',
                                  user='root',
@@ -56,6 +65,9 @@ def get_co():
 
 @app.route('/getstats')
 def get_stats():
+    '''
+        Return statistics for the Homa page of the website
+    '''
     with get_co():
         with get_co().cursor() as cursor:
          # Create a new record
@@ -75,8 +87,6 @@ def get_stats():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 
 def allowed_file(filename):

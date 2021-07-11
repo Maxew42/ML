@@ -1,0 +1,9 @@
+matplotlib
+torchvision
+torch
+flask
+flask_cors
+folium
+werkzeug
+geopy
+pymysql

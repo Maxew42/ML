@@ -31,7 +31,7 @@ The project is divided in three main parts :
 ### web-site
 
 The website was created with VueJS 3.0.1. It is working in pair with an homemade API powered by Flask 2.0.1
-This is a development website.
+This is a development website.  
 
 #### Website installation steps
 
@@ -39,5 +39,6 @@ This is a development website.
 2. Setup the database :
   1. Import `dbTrashedy.sql` in MySQL
   2. Modify connection information in `server/main.py`to fit your own database.
-3. Launch the Vue.js app with `npm install` then `npm run serve`
-4. Launch the Flask API with `python server/main.py`
+3. Get a model from `ml-models-environment/saved_models/url_to_models.json` and copy it in `server/static/ml_models`. Adapt the `MODEL_PATH` value in `main.py` if needed.
+4. Launch the Vue.js app with `npm install` then `npm run serve`
+5. Launch the Flask API with `python server/main.py`
