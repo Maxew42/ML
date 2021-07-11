@@ -28,7 +28,7 @@ The project is divided in three main parts :
   * Train : This notebook can be use to train a pretrained faster rccn model on a specific dataset.
   * Load and execute Model : This notebook is a walk-through presenting how to load a saved model and perform prediction on images in a dataset.
 
-* Saved model and datasets : More informations on the purpose of these folders can be found in the [main readme](https://github.com/Maxew42/ML).
+* Saved model and datasets : These directories are made to contain the models and datasets. As they are too heavy to be hosted on GitHub you will need to download them with the links available in `url_to_*.json`
 
 ### web-site
 
