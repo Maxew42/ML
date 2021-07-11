@@ -1,6 +1,6 @@
 # Trashedy
 
-Repository for the Trashedy project. A five weeks school project aiming to develop a ML object detection model to help map river litter.
+Repository for the Trashedy project. A four weeks school project aiming to develop a ML object detection model to help map river litter. 
 
 ## Authors
 
@@ -39,6 +39,6 @@ This is a development website.
 2. Setup the database :
   1. Import `dbTrashedy.sql` in MySQL
   2. Modify connection information in `server/main.py`to fit your own database.
-3. Get a model from `ml-models-environment/saved_models/url_to_models.json` and copy it in `server/static/ml_models`. Adapt the `MODEL_PATH` value in `main.py` if needed.
+3. Get a model from `ml-models-environment/saved_models/url_to_models.json` and copy it in `web-site/server/static/ml_models`. Adapt the `MODEL_PATH` value in `web-site/server/main.py` if needed.
 4. Launch the Vue.js app with `npm install` then `npm run serve`
-5. Launch the Flask API with `python server/main.py`
+5. Launch the Flask API with `python web-site/server/main.py`
